@@ -14,12 +14,40 @@ public class StopwatchActivity extends Activity {
     // состояние секундомера
     boolean running;
 
+    public boolean wasRunning;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stopwatch);
+        if (savedInstanceState != null) {
+            seconds = savedInstanceState.getInt("seconds");
+            running = savedInstanceState.getBoolean("running");
+            wasRunning=savedInstanceState.getBoolean("wasRunning");
+        }
         runTimer();
+    }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putInt("seconds", seconds);
+        savedInstanceState.putBoolean("running", running);
+        savedInstanceState.putBoolean("wasRunning",wasRunning);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        wasRunning=running;
+        running=false;
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (wasRunning){
+            running=true;
+        }
     }
 
     //при щелчке на Start запускается секундомер
